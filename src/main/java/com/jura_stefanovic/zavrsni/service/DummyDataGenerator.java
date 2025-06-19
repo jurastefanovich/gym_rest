@@ -224,7 +224,7 @@ public class DummyDataGenerator {
     }
 
     public void createAppointments() {
-        appointmentGenerator.generateDummyGroupAppointments(200);
+        appointmentGenerator.generateDummyGroupAppointments(500);
     }
 
 

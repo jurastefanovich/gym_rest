@@ -47,4 +47,9 @@ public class GymServiceController {
     public ResponseEntity<?> getGroupServices() {
         return gymServiceService.getGroupServices();
     }
+
+    @GetMapping("/exercises")
+    public ResponseEntity<?> getAllExercises() {
+        return gymServiceService.getAllExercises();
+    }
 }

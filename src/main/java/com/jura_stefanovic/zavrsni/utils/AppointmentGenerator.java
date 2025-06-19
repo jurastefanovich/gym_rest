@@ -73,7 +73,7 @@ public class AppointmentGenerator {
 
                 User trainer = helpers.getRandom(trainers);
                 GymService service = helpers.getRandom(groupServices);
-                List<User> participants = helpers.getRandomClients(clients, 2 + new Random().nextInt(service.getMaxUsersPerGroupSession()));
+                List<User> participants = helpers.getRandomClients(clients, 2 + new Random().nextInt(service.getMaxUsersPerGroupSession()-1));
 
                 LocalDateTime slot = helpers.getNextAvailableSlot(usedSlots);
                 if (slot == null || usedSlots.contains(slot)) continue;
