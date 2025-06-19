@@ -1,0 +1,68 @@
+package com.jura_stefanovic.zavrsni.constants;
+
+
+public enum Exercise {
+    // Upper Body
+    BENCH_PRESS,
+    INCLINE_BENCH_PRESS,
+    DECLINE_BENCH_PRESS,
+    DUMBBELL_PRESS,
+    PUSH_UP,
+    PULL_UP,
+    LAT_PULLDOWN,
+    BENT_OVER_ROW,
+    SEATED_CABLE_ROW,
+    T_BAR_ROW,
+    DUMBBELL_ROW,
+    CHEST_FLY,
+    PEC_DECK,
+    SHOULDER_PRESS,
+    LATERAL_RAISE,
+    FRONT_RAISE,
+    REAR_DELT_FLY,
+    UPRIGHT_ROW,
+    SHRUGS,
+    TRICEP_DIP,
+    TRICEP_PUSH_DOWN,
+    TRICEP_OVERHEAD_EXTENSION,
+    BICEP_CURL,
+    HAMMER_CURL,
+    CONCENTRATION_CURL,
+
+    // Lower Body
+    SQUAT,
+    FRONT_SQUAT,
+    LEG_PRESS,
+    LUNGES,
+    BULGARIAN_SPLIT_SQUAT,
+    DEADLIFT,
+    ROMANIAN_DEADLIFT,
+    LEG_EXTENSION,
+    LEG_CURL,
+    CALF_RAISE,
+    GLUTE_BRIDGE,
+
+    // Core
+    PLANK,
+    CRUNCHES,
+    SIT_UPS,
+    RUSSIAN_TWIST,
+    LEG_RAISE,
+    HANGING_LEG_RAISE,
+    BICYCLE_CRUNCH,
+    MOUNTAIN_CLIMBERS,
+
+    // Cardio & Functional
+    JUMP_ROPE,
+    BURPEES,
+    ROWING_MACHINE,
+    TREADMILL_RUNNING,
+    STAIR_CLIMBER,
+    ASSAULT_BIKE,
+    KETTLEBELL_SWING,
+    BOX_JUMP,
+    BATTLE_ROPES;
+
+}
+
+
