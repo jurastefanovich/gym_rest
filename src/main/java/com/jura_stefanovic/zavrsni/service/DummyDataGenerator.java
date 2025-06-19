@@ -1,5 +1,6 @@
 package com.jura_stefanovic.zavrsni.service;
 
+import com.jura_stefanovic.zavrsni.utils.AppointmentGenerator;
 import com.jura_stefanovic.zavrsni.utils.GymServiceGenerator;
 import com.jura_stefanovic.zavrsni.utils.UserGenerator;
 import lombok.AllArgsConstructor;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 public class DummyDataGenerator {
     private final UserGenerator userGenerator;
     private final GymServiceGenerator gymServiceGenerator;
+    private final AppointmentGenerator appointmentGenerator;
 
     public void createAdminUser() {
        userGenerator.createAdminUser();
@@ -57,7 +59,7 @@ public class DummyDataGenerator {
         );
 
         userGenerator.createTrainerUser(
-                "srogers", "securePass9", "Steve", "Rogers", "steve.rogers@example.com", "0912345679",
+                "srogers", "securePass9", "Steve", "Rogers", "steve.rogers.second@example.com", "0912345679",
                 "Steve leads with unwavering dedication and a passion for empowering others. His coaching style is based on values of consistency, determination, and honor. Steve focuses on full-body strength development, cardiovascular endurance, and instilling confidence in his clients. His sessions promote discipline, grit, and balance, with routines that support long-term transformation and health. Steve helps clients unlock their full physical and personal potential."
         );
 
@@ -65,12 +67,83 @@ public class DummyDataGenerator {
                 "bannerb", "securePass10", "Bruce", "Banner", "bruce.banner@example.com", "0912345680",
                 "Bruce blends the science of human performance with practical fitness techniques. With a background in biomechanics and kinesiology, he focuses on smart training that maximizes results while minimizing injury risk. His calm demeanor and methodical approach help clients understand the 'why' behind every movement. Bruce believes in evidence-based training, recovery, and a well-rounded program that supports both the body and the mind in harmony."
         );
+
+        userGenerator.createTrainerUser(
+                "rogersc", "securePass11", "Steve", "Rogers", "steve.rogers@example.com", "0912345681",
+                "Steve brings a military-style discipline to personal training. With a strong emphasis on consistency and form, he helps clients build resilience and confidence. Steve believes that every small step leads to big changes and motivates his clients to push past perceived limits safely and sustainably."
+        );
+
+        userGenerator.createTrainerUser(
+                "romanovn", "securePass12", "Natasha", "Romanov", "natasha.romanov@example.com", "0912345682",
+                "Natasha combines flexibility training with core strength routines, helping clients improve posture and balance. With a background in martial arts and gymnastics, her sessions are dynamic and challenging. She promotes mental focus as much as physical conditioning."
+        );
+
+        userGenerator.createTrainerUser(
+                "starkt", "securePass13", "Tony", "Stark", "tony.stark.alive@example.com", "0912345683",
+                "Tony takes a tech-driven approach to training, utilizing performance tracking and data analysis to guide workouts. With a background in engineering and sports science, he customizes each program to match client goals with measurable outcomes. Tony believes fitness should be efficient, fun, and constantly evolving."
+        );
+
+        userGenerator.createTrainerUser(
+                "parkerk", "securePass14", "Peter", "Parker", "peter.parker.toby@example.com", "0912345684",
+                "Peter is energetic and relatable, specializing in training teens and young adults. His workouts blend agility, strength, and endurance with a strong emphasis on bodyweight training. Peter makes fitness approachable and motivating through education and enthusiasm."
+        );
+
+        userGenerator.createTrainerUser(
+                "danversc", "securePass15", "Carol", "Danvers", "carol.danvers@example.com", "0912345685",
+                "Carol is known for her empowering training style that encourages confidence and inner strength. With experience in both endurance sports and strength training, she tailors programs for women looking to improve fitness and mental toughness."
+        );
+
+        userGenerator.createTrainerUser(
+                "rhodesj", "securePass16", "James", "Rhodes", "james.rhodes@example.com", "0912345686",
+                "James integrates military training protocols with adaptive fitness strategies, making workouts accessible for clients of all ability levels. He believes in scalable progress, where every client can succeed no matter where they start."
+        );
+
+        userGenerator.createTrainerUser(
+                "wilsont", "securePass17", "Sam", "Wilson", "sam.wilson@example.com", "0912345687",
+                "Sam's coaching focuses on cardiovascular health, functional strength, and mobility. As a former pararescue trainer, he brings compassion and structure to his sessions. He emphasizes the importance of training for real-life movement and long-term wellness."
+        );
+
+        userGenerator.createTrainerUser(
+                "maximoffw", "securePass18", "Wanda", "Maximoff", "wanda.maximoff@example.com", "0912345688",
+                "Wanda blends mindful movement with high-intensity training. With a background in pilates and dance, she helps clients improve coordination, flexibility, and focus. She believes fitness is not just about the body, but a balance of mind, movement, and intention."
+        );
+
+        userGenerator.createTrainerUser(
+                "langs", "securePass19", "Scott", "Lang", "scott.lang@example.com", "0912345689",
+                "Scott makes fitness fun and approachable, especially for busy parents and beginners. His training style includes time-efficient workouts, practical strength routines, and a sense of humor that keeps clients motivated and engaged."
+        );
+
+        userGenerator.createTrainerUser(
+                "tchallah", "securePass20", "T’Challa", "Udaku", "tchalla.udaku@example.com", "0912345690",
+                "T’Challa emphasizes balance between power and grace. Drawing from traditional athletic disciplines and modern strength science, he designs programs that challenge both body and spirit. He believes in training with purpose, precision, and respect for the body’s full potential."
+        );
+
     }
 
     public void createUsers() {
         userGenerator.creatingUser("bwilliams", "securePass3", "Bob", "Williams", "bob.williams@example.com", "0912345673");
         userGenerator.creatingUser("cjohnson", "securePass4", "Carol", "Johnson", "carol.johnson@example.com", "0912345674");
         userGenerator.creatingUser("dmiller", "securePass5", "David", "Miller", "david.miller@example.com", "0912345675");
+
+        userGenerator.creatingUser("esanchez", "securePass6", "Eva", "Sanchez", "eva.sanchez@example.com", "0912345676");
+        userGenerator.creatingUser("flee", "securePass7", "Frank", "Lee", "frank.lee@example.com", "0912345677");
+        userGenerator.creatingUser("gmartin", "securePass8", "Grace", "Martin", "grace.martin@example.com", "0912345678");
+        userGenerator.creatingUser("hclark", "securePass9", "Henry", "Clark", "henry.clark@example.com", "0912345679");
+        userGenerator.creatingUser("ijames", "securePass10", "Ivy", "James", "ivy.james@example.com", "0912345680");
+        userGenerator.creatingUser("jkhan", "securePass11", "Jamal", "Khan", "jamal.khan@example.com", "0912345681");
+        userGenerator.creatingUser("klewis", "securePass12", "Kate", "Lewis", "kate.lewis@example.com", "0912345682");
+
+        userGenerator.creatingUser("lgreen", "securePass13", "Liam", "Green", "liam.green@example.com", "0912345683");
+        userGenerator.creatingUser("mwhite", "securePass14", "Mia", "White", "mia.white@example.com", "0912345684");
+        userGenerator.creatingUser("nroberts", "securePass15", "Noah", "Roberts", "noah.roberts@example.com", "0912345685");
+        userGenerator.creatingUser("oedwards", "securePass16", "Olivia", "Edwards", "olivia.edwards@example.com", "0912345686");
+        userGenerator.creatingUser("pbennett", "securePass17", "Paul", "Bennett", "paul.bennett@example.com", "0912345687");
+        userGenerator.creatingUser("qthomas", "securePass18", "Quinn", "Thomas", "quinn.thomas@example.com", "0912345688");
+        userGenerator.creatingUser("rhill", "securePass19", "Rachel", "Hill", "rachel.hill@example.com", "0912345689");
+        userGenerator.creatingUser("sscott", "securePass20", "Sean", "Scott", "sean.scott@example.com", "0912345690");
+        userGenerator.creatingUser("tadams", "securePass21", "Tina", "Adams", "tina.adams@example.com", "0912345691");
+        userGenerator.creatingUser("uwright", "securePass22", "Umar", "Wright", "umar.wright@example.com", "0912345692");
+        userGenerator.creatingUser("vhernandez", "securePass23", "Vera", "Hernandez", "vera.hernandez@example.com", "0912345693");
     }
 
 
@@ -149,6 +222,12 @@ public class DummyDataGenerator {
                 true
         );
     }
+
+    public void createAppointments() {
+        appointmentGenerator.generateDummyGroupAppointments(200);
+    }
+
+
 
 
 }

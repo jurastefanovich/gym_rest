@@ -4,6 +4,8 @@ import com.jura_stefanovic.zavrsni.model.entity.GymService;
 import com.jura_stefanovic.zavrsni.repository.GymServiceRepository;
 import org.springframework.stereotype.Component;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -20,5 +22,9 @@ public class GymServiceManger {
 
     public GymService save(GymService gymService) {
         return gymServiceRepository.save(gymService);
+    }
+
+    public List<GymService> findAll() {
+        return gymServiceRepository.findAll();
     }
 }
