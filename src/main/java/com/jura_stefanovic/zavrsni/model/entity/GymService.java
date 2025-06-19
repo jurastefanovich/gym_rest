@@ -1,5 +1,6 @@
 package com.jura_stefanovic.zavrsni.model.entity;
 
+import com.jura_stefanovic.zavrsni.constants.Exercise;
 import com.jura_stefanovic.zavrsni.dto.requests.GymServiceRequest;
 import jakarta.persistence.*;
 import lombok.*;
@@ -7,6 +8,7 @@ import lombok.*;
 import java.io.Serializable;
 import java.time.Duration;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "gym_service")
@@ -42,6 +44,8 @@ public class GymService implements Serializable {
 
     private boolean active = true;
 
+    private List<Exercise> exercises;
+
     public GymService(GymServiceRequest request) {
         this.title = request.getTitle();
         this.description = request.getDescription();
@@ -56,6 +60,20 @@ public class GymService implements Serializable {
                 this.durationSeconds = request.getDurationSeconds();
             }
         }
+        if (request.getExercises() != null && !request.getExercises().isEmpty()) {
+            this.exercises = request.getExercises().stream()
+                    .map(this::normalizeExerciseName)
+                    .map(Exercise::valueOf)
+                    .collect(Collectors.toList());
+
+        }
+    }
+
+    public String normalizeExerciseName(String input) {
+        return input.trim()
+                .toUpperCase()
+                .replace(" ", "_")
+                .replace("-", "_");
     }
 
     @Override
