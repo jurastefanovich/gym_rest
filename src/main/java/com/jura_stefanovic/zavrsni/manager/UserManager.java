@@ -48,4 +48,8 @@ public class UserManager {
     public User getRandomTrainer() {
         return userRepo.getRandomTrainer(Role.TRAINER);
     }
+
+    public List<User> findAll() {
+        return userRepo.findAll();
+    }
 }
