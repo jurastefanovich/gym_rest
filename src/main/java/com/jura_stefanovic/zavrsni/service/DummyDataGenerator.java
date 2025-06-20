@@ -1,6 +1,7 @@
 package com.jura_stefanovic.zavrsni.service;
 
 import com.jura_stefanovic.zavrsni.utils.AppointmentGenerator;
+import com.jura_stefanovic.zavrsni.utils.GymDataGenerator;
 import com.jura_stefanovic.zavrsni.utils.GymServiceGenerator;
 import com.jura_stefanovic.zavrsni.utils.UserGenerator;
 import lombok.AllArgsConstructor;
@@ -12,7 +13,10 @@ public class DummyDataGenerator {
     private final UserGenerator userGenerator;
     private final GymServiceGenerator gymServiceGenerator;
     private final AppointmentGenerator appointmentGenerator;
-
+    private final GymDataGenerator gymDataGenerator;
+    public void createGymData() {
+        gymDataGenerator.createIronPathGym();
+    }
     public void createAdminUser() {
        userGenerator.createAdminUser();
     }
@@ -224,7 +228,7 @@ public class DummyDataGenerator {
     }
 
     public void createAppointments() {
-        appointmentGenerator.generateDummyGroupAppointments(500);
+        appointmentGenerator.generateDummyGroupAppointments(100);
     }
 
 

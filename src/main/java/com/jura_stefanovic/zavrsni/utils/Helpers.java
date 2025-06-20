@@ -4,6 +4,7 @@ import com.jura_stefanovic.zavrsni.model.entity.User;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -22,12 +23,31 @@ public class Helpers {
     }
 
     public  LocalDateTime getNextAvailableSlot(List<LocalDateTime> used) {
-        LocalDateTime base = LocalDateTime.now().withMinute(0).withSecond(0).plusDays(1);
-        for (int i = 0; i < 1000; i++) {
-            LocalDateTime candidate = base.plusHours(i);
-            boolean conflict = used.stream().anyMatch(dt -> dt.equals(candidate));
-            if (!conflict) return candidate;
+        LocalDateTime now = LocalDateTime.now().withMinute(0).withSecond(0).withNano(0);
+        LocalDateTime start = now.minusMonths(3).withMinute(0).withSecond(0).withNano(0);
+        LocalDateTime end = now.plusMonths(3).withMinute(0).withSecond(0).withNano(0);
+
+        // Calculate total hours between start and end
+        long totalHours = ChronoUnit.HOURS.between(start, end);
+
+        // Generate all candidate slots at hour precision
+        List<LocalDateTime> candidates = new ArrayList<>();
+        for (long i = 0; i <= totalHours; i++) {
+            candidates.add(start.plusHours(i));
         }
+
+        // Shuffle to randomize order
+        Collections.shuffle(candidates);
+
+        // Find first candidate that is NOT in 'used'
+        for (LocalDateTime candidate : candidates) {
+            boolean conflict = used.stream().anyMatch(dt -> dt.equals(candidate));
+            if (!conflict) {
+                return candidate;
+            }
+        }
+
+        // No available slot found
         return null;
     }
 }

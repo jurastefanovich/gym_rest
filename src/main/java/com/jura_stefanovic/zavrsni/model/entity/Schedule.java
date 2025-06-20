@@ -1,6 +1,7 @@
 package com.jura_stefanovic.zavrsni.model.entity;
 
 import com.jura_stefanovic.zavrsni.constants.Day;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,6 +10,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Entity
 @Data
@@ -17,7 +19,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @EqualsAndHashCode
 public class Schedule implements Serializable {
-
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,8 +31,10 @@ public class Schedule implements Serializable {
 
     private LocalDateTime end;
 
+    private boolean working;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "trainer_id")
+    @Nullable
     private User trainer;
-
 }

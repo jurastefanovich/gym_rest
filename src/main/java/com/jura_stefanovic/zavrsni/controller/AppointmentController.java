@@ -49,6 +49,10 @@ public class AppointmentController {
         return appointmentService.getAppointmentById(id);
     }
 
+    @GetMapping("/calendar")
+    public ResponseEntity<?> getAllForCalendar() {
+        return appointmentService.getAllForCalendar();
+    }
     @GetMapping("/participants/{id}")
     public ResponseEntity<?> getAllParticipants(@PathVariable Long id) {
         return appointmentService.getAllParticipants(id);
