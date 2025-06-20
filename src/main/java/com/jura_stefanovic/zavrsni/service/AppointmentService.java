@@ -462,4 +462,13 @@ public class AppointmentService {
         dbAppointment.setStatistics(saved);
 
     }
+
+    public ResponseEntity<?> getAllForCalendar() {
+        List<Appointment> appointments = appointmentManager.findAll();
+        if (appointments.isEmpty()) {
+            return ResponseEntity.ok().body(new ArrayList<>());
+        }
+        List<AppointmentListDto> dtos = appointments.stream().map(appointment -> new  AppointmentListDto(appointment)).toList();
+        return ResponseEntity.ok().body(dtos);
+    }
 }
