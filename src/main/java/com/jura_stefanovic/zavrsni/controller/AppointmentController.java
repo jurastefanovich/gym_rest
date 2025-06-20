@@ -126,4 +126,9 @@ public class AppointmentController {
         return appointmentService.finishAppointment(requestDTO, appointmentId);
     }
 
+    @GetMapping("/finish/{appointmentId}")
+    public ResponseEntity<?> getFinishAppointment(@PathVariable Long appointmentId) {
+        return appointmentService.getFinishAppointment(appointmentId);
+    }
+
 }

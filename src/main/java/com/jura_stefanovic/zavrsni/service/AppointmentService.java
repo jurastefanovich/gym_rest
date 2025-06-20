@@ -11,6 +11,7 @@ import com.jura_stefanovic.zavrsni.dto.requests.FinishAppointmentRequestDTO;
 import com.jura_stefanovic.zavrsni.dto.requests.GroupAppointmentRequest;
 import com.jura_stefanovic.zavrsni.dto.requests.ServiceAppointmentDto;
 import com.jura_stefanovic.zavrsni.dto.response.ErrorResponse;
+import com.jura_stefanovic.zavrsni.dto.response.FinishAppointmentResponseDto;
 import com.jura_stefanovic.zavrsni.manager.AppointmentManager;
 import com.jura_stefanovic.zavrsni.manager.GymServiceManger;
 import com.jura_stefanovic.zavrsni.manager.StatisticsManager;
@@ -470,5 +471,14 @@ public class AppointmentService {
         }
         List<AppointmentListDto> dtos = appointments.stream().map(appointment -> new  AppointmentListDto(appointment)).toList();
         return ResponseEntity.ok().body(dtos);
+    }
+
+    public ResponseEntity<?> getFinishAppointment(Long appointmentId) {
+        Appointment db = appointmentManager.findById(appointmentId);
+        if (db == null) {
+            return ResponseEntity.badRequest().body("Appointment wasn't found.");
+        }
+        FinishAppointmentResponseDto dto = new FinishAppointmentResponseDto(db);
+        return ResponseEntity.ok().body(dto);
     }
 }
