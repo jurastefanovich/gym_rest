@@ -80,11 +80,12 @@ public interface AppointmentRepository  extends JpaRepository<Appointment, Long>
 """)
     List<LocalDateTime> findFinishedAppointmentDatesByUser(@Param("userId") Long userId);
 
-    @Query("SELECT a FROM Appointment a " +
-            "WHERE a.status = :status AND a.date >= :from " +
+    @Query("SELECT a FROM Appointment a left join a.users u where u.id = :id " +
+            "and a.status = :status AND a.date >= :from " +
             "AND a.statistics IS NOT NULL")
     List<Appointment> findFinishedAppointmentsWithStatisticsAfter(
             @Param("status") Status status,
-            @Param("from") LocalDateTime from
+            @Param("from") LocalDateTime from,
+            @Param("id") Long id
     );
 }

@@ -2,10 +2,7 @@ package com.jura_stefanovic.zavrsni.manager;
 
 import com.jura_stefanovic.zavrsni.constants.Status;
 import com.jura_stefanovic.zavrsni.model.entity.GymService;
-import com.jura_stefanovic.zavrsni.model.entity.User;
 import com.jura_stefanovic.zavrsni.repository.AppointmentRepository;
-import org.springframework.cglib.core.Local;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import com.jura_stefanovic.zavrsni.model.entity.Appointment;
 import jakarta.persistence.EntityNotFoundException;
@@ -151,7 +148,7 @@ public class AppointmentManager {
         return streak;
     }
 
-    public List<Appointment> findByStatusAndDateAfter(Status status, LocalDateTime from) {
-        return appointmentRepository.findFinishedAppointmentsWithStatisticsAfter(status, from);
+    public List<Appointment> findByStatusAndDateAfter(Status status, LocalDateTime from, Long id) {
+        return appointmentRepository.findFinishedAppointmentsWithStatisticsAfter(status, from, id);
     }
 }

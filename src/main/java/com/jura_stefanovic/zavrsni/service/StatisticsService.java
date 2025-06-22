@@ -85,10 +85,6 @@ public class StatisticsService {
         return ResponseEntity.ok().body(dto);
     }
 
-    private List<ExercisePerformance> getUserExercises(Long userId) {
-        return exercisePerformanceManager.findByUserId(userId);
-    }
-
     private List<ExerciseRepsSummaryDTO> getTotalRepsPerExercise(Long userId) {
         return exercisePerformanceManager.getTotalRepsPerExercise(userId).stream().limit(5)
                 .map(obj -> new ExerciseRepsSummaryDTO(
@@ -103,7 +99,7 @@ public class StatisticsService {
         if (Objects.equals(selectedExercise, "")) {
             return ResponseEntity.ok().body(null);
         }
-
+        User user = getUser();
         LocalDateTime from = switch (timeframe.toLowerCase()) {
             case "day" -> LocalDateTime.now().minusDays(1);
             case "week" -> LocalDateTime.now().minusWeeks(1);
@@ -114,7 +110,7 @@ public class StatisticsService {
 
         // Get only finished appointments with statistics and performances
         List<Appointment> finishedAppointments = appointmentManager
-                .findByStatusAndDateAfter(Status.FINISHED, from);
+                .findByStatusAndDateAfter(Status.FINISHED, from, user.getId());
 
         // Flatten all performances
         Map<LocalDate, Integer> dailyReps = new TreeMap<>();
