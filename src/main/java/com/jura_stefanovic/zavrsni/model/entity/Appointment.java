@@ -1,6 +1,7 @@
 package com.jura_stefanovic.zavrsni.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.jura_stefanovic.zavrsni.constants.Status;
 import com.jura_stefanovic.zavrsni.dto.models.appointment.AppointmentPutDto;
 import jakarta.annotation.Nullable;
@@ -82,5 +83,15 @@ public class Appointment implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    @Override
+    public String toString() {
+        return "Appointment{" +
+                "id=" + id +
+                ", date=" + date +
+                ", description='" + description + '\'' +
+                ", individual=" + individual +
+                '}';
     }
 }

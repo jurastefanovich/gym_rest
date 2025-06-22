@@ -90,7 +90,13 @@ public class AppointmentGenerator {
                 appointment.setTrainer(trainer);
                 appointment.setUsers(participants);
                 appointment.setService(service);
-                appointment.setStatus(Status.ACTIVE);
+
+                int randomNum = (int)(Math.random() * 90);
+                if (randomNum % 3 == 0) {
+                    appointment.setStatus(Status.FINISHED);
+                } else {
+                    appointment.setStatus(Status.ACTIVE);
+                }
                 appointment.setDate(slot);
                 appointment.setIndividual(false);
 

@@ -1,9 +1,6 @@
 package com.jura_stefanovic.zavrsni.service;
 
-import com.jura_stefanovic.zavrsni.utils.AppointmentGenerator;
-import com.jura_stefanovic.zavrsni.utils.GymDataGenerator;
-import com.jura_stefanovic.zavrsni.utils.GymServiceGenerator;
-import com.jura_stefanovic.zavrsni.utils.UserGenerator;
+import com.jura_stefanovic.zavrsni.utils.*;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,9 +11,11 @@ public class DummyDataGenerator {
     private final GymServiceGenerator gymServiceGenerator;
     private final AppointmentGenerator appointmentGenerator;
     private final GymDataGenerator gymDataGenerator;
+    private final StatisticsGenerator statisticsGenerator;
     public void createGymData() {
         gymDataGenerator.createIronPathGym();
     }
+    public void createStats() {statisticsGenerator.generateStatisticsForAllFinishedAppointmentsWithUsers();}
     public void createAdminUser() {
        userGenerator.createAdminUser();
     }
@@ -228,7 +227,7 @@ public class DummyDataGenerator {
     }
 
     public void createAppointments() {
-        appointmentGenerator.generateDummyGroupAppointments(100);
+        appointmentGenerator.generateDummyGroupAppointments(300);
     }
 
 

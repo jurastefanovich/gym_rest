@@ -34,6 +34,7 @@ public class GymServiceManger {
     public List<String> getAllExercises() {
         return Arrays.stream(Exercise.values())
                 .map(exercise -> formatEnumName(exercise.name()))
+                .sorted()
                 .collect(Collectors.toList());
     }
 

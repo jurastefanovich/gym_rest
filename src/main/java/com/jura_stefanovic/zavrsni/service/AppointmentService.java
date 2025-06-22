@@ -11,6 +11,7 @@ import com.jura_stefanovic.zavrsni.dto.requests.FinishAppointmentRequestDTO;
 import com.jura_stefanovic.zavrsni.dto.requests.GroupAppointmentRequest;
 import com.jura_stefanovic.zavrsni.dto.requests.ServiceAppointmentDto;
 import com.jura_stefanovic.zavrsni.dto.response.ErrorResponse;
+import com.jura_stefanovic.zavrsni.dto.response.FinishAppointmentResponseDto;
 import com.jura_stefanovic.zavrsni.manager.AppointmentManager;
 import com.jura_stefanovic.zavrsni.manager.GymServiceManger;
 import com.jura_stefanovic.zavrsni.manager.StatisticsManager;
@@ -34,64 +35,6 @@ public class AppointmentService {
     private final GymServiceManger gymServiceManger;
     private final UserManager userManager;
     private final StatisticsManager statisticsManager;
-    //Old method currently unused
-    public ResponseEntity<?> saveAppointment(ServiceAppointmentDto dto) {
-        User loggedInUser = userManager.getCurrentUser();
-
-        try {
-            GymService gymService = gymServiceManger.findById(dto.getServiceId()).orElse(null);
-
-            if (gymService == null) {
-                return ResponseEntity.badRequest().body("No service found, can't book appointment");
-            }
-
-            // Step 1: Check if an appointment exists at that date with the same service
-            Optional<Appointment> existingAppointmentOpt =
-                    appointmentManager.findByServiceAndDate(gymService, dto.getDateAndTime());
-
-            if (existingAppointmentOpt.isPresent()) {
-                Appointment existingAppointment = existingAppointmentOpt.get();
-                List<User> users = existingAppointment.getUsers();
-
-                // Step 2: Check if user is already added
-                if (users.contains(loggedInUser)) {
-                    return ResponseEntity.ok("User already in the appointment.");
-                }
-
-                // Step 3: Check if there's room
-                if (users.size() >= gymService.getMaxUsersPerGroupSession()) {
-                    return ResponseEntity.badRequest().body("Appointment is full.");
-                }
-
-                // Step 4: Add user
-                users.add(loggedInUser);
-                existingAppointment.setUsers(users);
-                appointmentManager.save(existingAppointment);
-
-                return ResponseEntity.ok("User added to existing appointment.");
-            }
-
-            // Step 5: No existing appointment → create a new one
-            Appointment appointment = new Appointment();
-            List<User> users = new ArrayList<>();
-            users.add(loggedInUser);
-            appointment.setUsers(users);
-            appointment.setDate(dto.getDateAndTime());
-            appointment.setTrainer(gymService.getTrainer());
-            appointment.setStatus(Status.PENDING);
-            appointment.setService(gymService);
-            appointment.setIndividual(gymService.isIndividual());
-
-            appointmentManager.save(appointment);
-
-            return ResponseEntity.ok("Appointment created.");
-        } catch (Exception e) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(new ErrorResponse("Error saving appointment: " + e.getMessage()));
-        }
-    }
-
 
     public ResponseEntity<?> getAllAppointments() {
         User currentUser = userManager.getCurrentUser();
@@ -386,10 +329,18 @@ public class AppointmentService {
         Appointment dbAppointment = appointmentManager.findById(appointmentId);
 
         dbAppointment.setStatus(Status.FINISHED);
+        Statistics stats = new Statistics(); // Shared statistics object
+        stats.setAppointment(dbAppointment);
+
+        if (requestDTO.getUserExerciseData().isEmpty()) {
+            return ResponseEntity.badRequest().body("Can not save empty data");
+        }
 
         try {
-            setStatsForAppointment(requestDTO, dbAppointment);
-            setStatisticsForUsers(requestDTO, dbAppointment);
+            setStatsForAppointment(requestDTO, stats);
+            setStatisticsForUsers(requestDTO, stats);
+            Statistics saved = statisticsManager.save(stats);
+            dbAppointment.setStatistics(saved);
             appointmentManager.save(dbAppointment);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
@@ -398,11 +349,9 @@ public class AppointmentService {
         return ResponseEntity.ok().body("Appointment finished successfully");
     }
 
-    private void setStatisticsForUsers(FinishAppointmentRequestDTO requestDTO, Appointment dbAppointment) {
-        Map<Long, Map<String, ExerciseDataDTO>> userData = requestDTO.getUserExerciseData();
-        Statistics stats = new Statistics();
 
-        List<ExercisePerformance> allPerformances = new ArrayList<>();
+    private void setStatisticsForUsers(FinishAppointmentRequestDTO requestDTO, Statistics stats) {
+        Map<Long, Map<String, ExerciseDataDTO>> userData = requestDTO.getUserExerciseData();
 
         for (Map.Entry<Long, Map<String, ExerciseDataDTO>> userEntry : userData.entrySet()) {
             Long userId = userEntry.getKey();
@@ -425,21 +374,16 @@ public class AppointmentService {
                 performance.setDuration(dto.getDuration());
                 performance.setRestTime(dto.getRestTime());
                 performance.setStatistics(stats);
-                performance.setUser(user); // Safe — but don’t reassign list in User
+                performance.setUser(user);
 
-                allPerformances.add(performance);
+                stats.getPerformances().add(performance);
             }
         }
-
-        stats.setPerformances(allPerformances);
-        statisticsManager.save(stats);
     }
 
 
-    private void setStatsForAppointment(FinishAppointmentRequestDTO requestDTO, Appointment dbAppointment) {
-        Statistics stats = new Statistics();
-        stats.setAppointment(dbAppointment);
 
+    private void setStatsForAppointment(FinishAppointmentRequestDTO requestDTO, Statistics stats) {
         Map<String, ExerciseDefaultsDTO> defaults = requestDTO.getExerciseDefaults();
 
         List<ExercisePerformance> performances = new ArrayList<>();
@@ -457,11 +401,10 @@ public class AppointmentService {
             performance.setStatistics(stats);
             performances.add(performance);
         }
-        stats.setPerformances(performances);
-        Statistics saved = statisticsManager.save(stats);
-        dbAppointment.setStatistics(saved);
 
+        stats.getPerformances().addAll(performances);
     }
+
 
     public ResponseEntity<?> getAllForCalendar() {
         List<Appointment> appointments = appointmentManager.findAll();
@@ -470,5 +413,14 @@ public class AppointmentService {
         }
         List<AppointmentListDto> dtos = appointments.stream().map(appointment -> new  AppointmentListDto(appointment)).toList();
         return ResponseEntity.ok().body(dtos);
+    }
+
+    public ResponseEntity<?> getFinishAppointment(Long appointmentId) {
+        Appointment db = appointmentManager.findById(appointmentId);
+        if (db == null) {
+            return ResponseEntity.badRequest().body("Appointment wasn't found.");
+        }
+        FinishAppointmentResponseDto dto = new FinishAppointmentResponseDto(db);
+        return ResponseEntity.ok().body(dto);
     }
 }
