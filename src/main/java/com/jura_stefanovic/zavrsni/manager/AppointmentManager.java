@@ -2,12 +2,15 @@ package com.jura_stefanovic.zavrsni.manager;
 
 import com.jura_stefanovic.zavrsni.constants.Status;
 import com.jura_stefanovic.zavrsni.model.entity.GymService;
+import com.jura_stefanovic.zavrsni.model.entity.User;
 import com.jura_stefanovic.zavrsni.repository.AppointmentRepository;
 import org.springframework.cglib.core.Local;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import com.jura_stefanovic.zavrsni.model.entity.Appointment;
 import jakarta.persistence.EntityNotFoundException;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -97,5 +100,58 @@ public class AppointmentManager {
 
     public List<Appointment> findAllGroupByUserId(Long id) {
         return appointmentRepository.findAllGroupByUserId(id);
+    }
+
+    public List<Appointment> findByStatus(Status status) {
+        return appointmentRepository.findByStatus(status);
+    }
+    public List<Appointment> findByStatusWithUsers(Status status) {
+        return appointmentRepository.findByStatusWithUsers(status);
+    }
+
+    public List<Appointment> getLastAppointments(Long id) {
+        return appointmentRepository.findByUserLimit(id);
+    }
+
+    public List<Appointment> findActiveSessionsForUserThisWeek(Long userId) {
+        return appointmentRepository.findActiveSessionsForUserThisWeek(userId, LocalDateTime.now(), LocalDateTime.now());
+    }
+
+    public Long countTotalSessions(Long userId) {
+        return appointmentRepository.countTotalSessions(Status.FINISHED, Status.ACTIVE, userId);
+    }
+
+    public List<LocalDateTime> findFinishedAppointmentDatesByUser(Long userId) {
+        return appointmentRepository.findFinishedAppointmentDatesByUser(userId);
+    }
+
+    public int calculateSessionStreakFromDateTimes(List<LocalDateTime> sessionDateTimes) {
+        if (sessionDateTimes.isEmpty()) return 0;
+
+        // Convert LocalDateTime to LocalDate
+        List<LocalDate> sessionDates = sessionDateTimes.stream()
+                .map(LocalDateTime::toLocalDate)
+                .distinct()  // in case multiple sessions per day
+                .sorted()
+                .toList();
+
+        int streak = 1;
+        LocalDate previousDate = sessionDates.get(0);
+
+        for (int i = 1; i < sessionDates.size(); i++) {
+            LocalDate currentDate = sessionDates.get(i);
+            if (currentDate.equals(previousDate.plusDays(1))) {
+                streak++;
+            } else if (!currentDate.equals(previousDate)) {
+                break;
+            }
+            previousDate = currentDate;
+        }
+
+        return streak;
+    }
+
+    public List<Appointment> findByStatusAndDateAfter(Status status, LocalDateTime from) {
+        return appointmentRepository.findFinishedAppointmentsWithStatisticsAfter(status, from);
     }
 }

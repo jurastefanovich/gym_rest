@@ -27,16 +27,11 @@ public class FinishAppointmentResponseDto extends AppointmentBasic {
         super(appointment);
         this.users = appointment.getUsers().stream().map(UserDto::new).toList();
         this.exercises = appointment.getService().getExercises().stream()
-                .map(val -> normalizeExerciseName(val.name()))
-                .collect(Collectors.toList());        this.trainer = new UserDto(appointment.getTrainer());
+                .map(val -> (val.name()))
+                .collect(Collectors.toList());
+        this.trainer = new UserDto(appointment.getTrainer());
         this.serviceTitle = appointment.getService().getTitle();
         this.notes = appointment.getDescription();
     }
-
-    public String normalizeExerciseName(String input) {
-        return input.trim()
-                .toUpperCase()
-                .replace(" ", "_")
-                .replace("-", "_");
-    }
+    
 }

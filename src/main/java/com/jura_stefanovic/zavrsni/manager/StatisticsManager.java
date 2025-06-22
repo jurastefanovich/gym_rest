@@ -15,4 +15,6 @@ public class StatisticsManager {
     public Statistics save(Statistics statistics) {
         return statisticsRepository.save(statistics);
     }
+
+
 }

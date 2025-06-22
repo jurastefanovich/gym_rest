@@ -1,5 +1,6 @@
 package com.jura_stefanovic.zavrsni.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.jura_stefanovic.zavrsni.constants.Exercise;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
@@ -33,11 +34,24 @@ public class ExercisePerformance implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "statistics_id", nullable = false)
+    @JsonIgnore
     private Statistics statistics;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     @Nullable
+    @JsonIgnore
     private User user;
 
+    @Override
+    public String toString() {
+        return "ExercisePerformance{" +
+                "id=" + id +
+                ", reps=" + reps +
+                ", sets=" + sets +
+                ", weight=" + weight +
+                ", duration=" + duration +
+                ", restTime=" + restTime +
+                '}';
+    }
 }

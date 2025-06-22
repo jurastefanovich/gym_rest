@@ -6,10 +6,14 @@ import com.jura_stefanovic.zavrsni.model.entity.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+import java.time.Month;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Component
 public class UserGenerator {
@@ -110,12 +114,21 @@ public class UserGenerator {
     public void creatingUser(String username, String password, String firstName, String lastName, String email, String phoneNumber) {
         System.out.println("""
     			=========================================================================================
-				=================================GENERATING TRAINERS ROLE=================================
+				=================================GENERATING USER ROLE=================================
 				=========================================================================================
 				""");
         if (userManager.findByUsername(username).isEmpty()) {
             User user = new User();
             user.setUsername(username);
+            LocalDateTime now = LocalDateTime.now();
+            LocalDateTime startOfYear = LocalDateTime.of(now.getYear(), Month.JANUARY, 1, 0, 0);
+
+            long secondsBetween = ChronoUnit.SECONDS.between(startOfYear, now);
+            long randomSeconds = ThreadLocalRandom.current().nextLong(secondsBetween + 1);
+
+            LocalDateTime randomPastTime = startOfYear.plusSeconds(randomSeconds);
+
+            user.setLastLoginTime(randomPastTime);
             user.setPassword(passwordEncoder.encode(password)); // secure it!
             user.setFirstName(firstName);
             user.setLastName(lastName);

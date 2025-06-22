@@ -1,5 +1,6 @@
 package com.jura_stefanovic.zavrsni.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,6 +8,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -22,10 +24,11 @@ public class Statistics implements Serializable {
 
     @OneToOne
     @JoinColumn(name = "appointment_id")
+    @JsonIgnore
     private Appointment appointment;
 
     @OneToMany(mappedBy = "statistics", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ExercisePerformance> performances;
+    private List<ExercisePerformance> performances = new ArrayList<>();
 
     @Override
     public boolean equals(Object object) {
@@ -38,5 +41,13 @@ public class Statistics implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    @Override
+    public String toString() {
+        return "Statistics{" +
+                "id=" + id +
+                ", performances=" + performances +
+                '}';
     }
 }

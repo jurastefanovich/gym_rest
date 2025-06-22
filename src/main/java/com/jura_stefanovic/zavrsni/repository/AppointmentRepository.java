@@ -7,6 +7,7 @@ import com.jura_stefanovic.zavrsni.model.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 
 import java.awt.print.Pageable;
@@ -40,4 +41,50 @@ public interface AppointmentRepository  extends JpaRepository<Appointment, Long>
 
     @Query("Select a from Appointment  a where a.individual = false and a.trainer.id = ?1 order by a.date ASC")
     List<Appointment> findAllGroupByUserId(Long id);
+
+    @Query("Select a from Appointment a where a.status = ?1")
+    List<Appointment> findByStatus(Status status);
+
+    @Query("SELECT a FROM Appointment a LEFT JOIN FETCH a.users WHERE a.status = :status")
+    List<Appointment> findByStatusWithUsers(@Param("status") Status status);
+
+    @Query("SELECT a FROM Appointment a JOIN a.users u WHERE u.id = :userId ORDER BY a.date ASC")
+    List<Appointment> findByUserLimit(@Param("userId") Long userId);
+
+    @Query("""
+    SELECT a FROM Appointment a 
+    JOIN a.users u
+    WHERE u.id = :userId
+      AND a.status = 'ACTIVE'
+      AND a.date BETWEEN :startOfWeek AND :endOfWeek
+    ORDER BY a.date ASC
+""")
+    List<Appointment> findActiveSessionsForUserThisWeek(@Param("userId") Long userId,
+                                                        @Param("startOfWeek") LocalDateTime startOfWeek,
+                                                        @Param("endOfWeek") LocalDateTime endOfWeek);
+
+    @Query("""
+    SELECT COUNT(a)
+    FROM Appointment a join a.users u where u.id = ?3
+    and a.status IN (?1, ?2)
+    """)
+    Long countTotalSessions(Status finished, Status active, Long userId);
+
+    @Query("""
+    SELECT a.date as originalDate
+    FROM Appointment a
+    JOIN a.users u
+    WHERE u.id = :userId
+      AND a.status = 'FINISHED'
+    ORDER BY a.date DESC
+""")
+    List<LocalDateTime> findFinishedAppointmentDatesByUser(@Param("userId") Long userId);
+
+    @Query("SELECT a FROM Appointment a " +
+            "WHERE a.status = :status AND a.date >= :from " +
+            "AND a.statistics IS NOT NULL")
+    List<Appointment> findFinishedAppointmentsWithStatisticsAfter(
+            @Param("status") Status status,
+            @Param("from") LocalDateTime from
+    );
 }

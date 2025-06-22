@@ -33,6 +33,7 @@ public class ZavrsniApplication {
 		dummyDataGenerator.createGymServices();
 		dummyDataGenerator.createUsers();
 		dummyDataGenerator.createAppointments();
+		dummyDataGenerator.createStats();
 
 		System.out.println("""
 		╔═════════════════════════════════════════════════╗
