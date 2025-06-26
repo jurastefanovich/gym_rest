@@ -27,9 +27,9 @@ public class Schedule implements Serializable {
     @Enumerated(EnumType.STRING)
     private Day day;
 
-    private LocalDateTime start;
+    private LocalDateTime startTime;
 
-    private LocalDateTime end;
+    private LocalDateTime endTime;
 
     private boolean working;
 

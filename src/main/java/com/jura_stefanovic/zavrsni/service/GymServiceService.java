@@ -58,13 +58,13 @@ public class GymServiceService {
         }
 
         gymServiceManger.save(gymService);
-        return ResponseEntity.ok("Gym service created successfully");
+        return ResponseEntity.ok("GymResponseDto service created successfully");
     }
 
     public ResponseEntity<?> update(Long id, GymServiceRequest request) {
         var existing = gymServiceManger.findById(id);
         if (existing.isEmpty()) {
-            return ResponseEntity.badRequest().body(new ErrorResponse("Gym service not found"));
+            return ResponseEntity.badRequest().body(new ErrorResponse("GymResponseDto service not found"));
         }
 
         GymService gymService = existing.get();
@@ -93,12 +93,12 @@ public class GymServiceService {
         }
 
         gymServiceManger.save(gymService);
-        return ResponseEntity.ok("Gym service updated successfully");
+        return ResponseEntity.ok("GymResponseDto service updated successfully");
     }
 
     public ResponseEntity<?> delete(Long id) {
         if (!gymServiceManger.existsById(id)) {
-            return ResponseEntity.badRequest().body("Gym service not found");
+            return ResponseEntity.badRequest().body("GymResponseDto service not found");
         }
         GymService db = gymServiceManger.findById(id).orElse(null);
         if (db == null) {
@@ -108,7 +108,7 @@ public class GymServiceService {
         db.setActive(false);
         gymServiceManger.save(db);
 
-        return ResponseEntity.ok("Gym service deleted successfully");
+        return ResponseEntity.ok("GymResponseDto service deleted successfully");
     }
 
     public ResponseEntity<?> getGroupServices() {

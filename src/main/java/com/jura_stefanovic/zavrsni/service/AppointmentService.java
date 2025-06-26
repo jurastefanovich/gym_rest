@@ -106,7 +106,7 @@ public class AppointmentService {
         Optional<Appointment> dbApp = appointmentManager.findByDate(update.getDateTime());
 
         if (gymService == null) {
-            throw new Exception("Gym service doesn't exist.");
+            throw new Exception("GymResponseDto service doesn't exist.");
         } else if (trainer == null) {
             throw new Exception("Trainer doesn't exist");
         } else if (dbApp.isPresent()) {

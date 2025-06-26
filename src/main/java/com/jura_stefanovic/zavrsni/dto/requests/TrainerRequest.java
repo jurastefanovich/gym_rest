@@ -1,40 +1,21 @@
 package com.jura_stefanovic.zavrsni.dto.requests;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.List;
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class TrainerRequest {
     private String email;
+    private String firstName;
+    private String lastName;
     private String username;
     private String password;
+    private List<String> specs;
+    private String desc;
 
-    public TrainerRequest(String email, String username, String password) {
-        this.email = email;
-        this.username = username;
-        this.password = password;
-    }
 
-    public TrainerRequest() {
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
 }

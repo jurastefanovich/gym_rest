@@ -1,5 +1,6 @@
 package com.jura_stefanovic.zavrsni.model.entity;
 
+import com.jura_stefanovic.zavrsni.dto.response.GymResponseDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -38,4 +39,10 @@ public class Gym implements Serializable {
     @JoinColumn(name = "gym_id")
     private List<Schedule> workingHours = new ArrayList<>();
 
+    public void updateGym(GymResponseDto dto) {
+        this.name = dto.getName();
+        this.address = dto.getLocation();
+        this.phone = dto.getPhone();
+        this.email = dto.getEmail();
+    }
 }

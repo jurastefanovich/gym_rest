@@ -29,8 +29,8 @@ public class GymDataGenerator {
         Arrays.stream(Day.values()).forEach(day -> {
             Schedule schedule = new Schedule();
             schedule.setDay(day);
-            schedule.setStart(LocalDateTime.of(LocalDate.now(), LocalTime.of(8, 0)));  // 08:00 today
-            schedule.setEnd(LocalDateTime.of(LocalDate.now(), LocalTime.of(23, 0)));   // 23:00 today
+            schedule.setStartTime(LocalDateTime.of(LocalDate.now(), LocalTime.of(8, 0)));  // 08:00 today
+            schedule.setEndTime(LocalDateTime.of(LocalDate.now(), LocalTime.of(23, 0)));   // 23:00 today
             gym.getWorkingHours().add(schedule);
         });
 

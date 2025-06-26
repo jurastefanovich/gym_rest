@@ -32,13 +32,20 @@ public class TrainerService {
 
     // Create
     public ResponseEntity<?> addTrainer(TrainerRequest request) {
-        if (userManager.findByEmail(request.getEmail()) != null) {
-            return ResponseEntity.badRequest().body(ErrorMessages.EMAIL_ALREADY_IN_USE.getMessage());
+
+        try {
+            trainerAuth(request);
+        }catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
 
         User trainer = new User();
         trainer.setEmail(request.getEmail());
         trainer.setUsername(request.getUsername());
+        trainer.setSpecialisation(request.getSpecs());
+        trainer.setDescription(request.getDesc());
+        trainer.setFirstName(request.getFirstName());
+        trainer.setLastName(request.getLastName());
         trainer.setPassword(passwordEncoder.encode(request.getPassword()));
         trainer.setRole(Role.TRAINER);
 
@@ -47,6 +54,13 @@ public class TrainerService {
         return ResponseEntity.ok().body("Trainer created successfully");
     }
 
+    private void trainerAuth(TrainerRequest request) throws Exception {
+        if (userManager.findByUsername(request.getUsername()).isPresent()) {
+            throw new Exception("Username taken");
+        } else if (userManager.findByEmail(request.getEmail()) != null) {
+            throw new Exception("Email taken");
+        }
+    }
     // Read all trainers
     public List<User> getAllTrainers() {
         return userManager.findAllByRole(Role.TRAINER);
@@ -101,8 +115,8 @@ public class TrainerService {
         for (EmployeeScheduleRequest req : schedules) {
             Schedule schedule = new Schedule();
             schedule.setDay(req.getDay());
-            schedule.setStart(req.getStart());
-            schedule.setEnd(req.getEnd());
+            schedule.setStartTime(req.getStart());
+            schedule.setEndTime(req.getEnd());
             schedule.setTrainer(trainer);
             employeeSchedules.add(schedule);
         }

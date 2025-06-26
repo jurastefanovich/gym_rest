@@ -28,6 +28,7 @@ public class ZavrsniApplication {
 				=================================GENERATING CUSTOM USERS=================================
 				=========================================================================================
 				""");
+		dummyDataGenerator.createGymData();
 		dummyDataGenerator.createAdminUser();
 		dummyDataGenerator.createTrainerUsers();
 		dummyDataGenerator.createGymServices();

@@ -58,6 +58,9 @@ public class AuthService {
         String accessToken = jwtUtil.generateToken(user);
         RefreshToken refreshTokenEntity = refreshTokenService.createRefreshToken(user.getEmail());
         String refreshToken = refreshTokenEntity.getToken();
+        if (user.getLastLoginTime() != null) {
+            user.setLoggedInBefore(true);
+        }
         user.setLastLoginTime(LocalDateTime.now());
         userManager.save(user);
 
