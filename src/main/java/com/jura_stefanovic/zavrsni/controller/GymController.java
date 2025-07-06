@@ -50,5 +50,21 @@ public class GymController {
     public ResponseEntity<?> saveGym(@RequestBody GymResponseDto dto) {
         return gymService.saveGym(dto);
     }
- }
+
+    @GetMapping("/dashboard/stats")
+    public ResponseEntity<?> getDashboardStats() {
+        return gymService.getDashboardStats();
+    }
+
+    @GetMapping("/stats/weekly-attendance")
+    public ResponseEntity<?> getWeeklyAttendance() {
+        return ResponseEntity.ok(gymService.getWeeklyAttendance());
+    }
+
+    @GetMapping("/stats/membership-growth")
+    public ResponseEntity<?> getMembershipGrowth() {
+        return ResponseEntity.ok(gymService.getMonthlyUserRegistrations());
+    }
+
+}
 

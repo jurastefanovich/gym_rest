@@ -16,7 +16,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.awt.image.RescaleOp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -34,20 +33,29 @@ public class StatisticsService {
         return userManager.getCurrentUser();
     }
 
-    public ResponseEntity<?> getLastAppointments(int numberOfAppointments) {
+    public ResponseEntity<?> getLastAppointments(int numberOfAppointments, Long id) {
         User user = getUser();
-        List<Appointment> appointments = appointmentManager.getLastAppointments(user.getId()).stream().limit(numberOfAppointments).toList();
+        Long userId = id == null ? user.getId() : id;
+        List<Appointment> appointments = appointmentManager.getLastAppointments(userId).stream().limit(numberOfAppointments).toList();
         List<AppointmentDetailsDto> dto = appointments.stream().map(a -> new AppointmentDetailsDto(a, true)).toList();
         return ResponseEntity.ok().body(dto);
     }
 
-    public ResponseEntity<?> getQuickStats() {
+
+    public ResponseEntity<?> getQuickStats(Long id) {
         User user = getUser();
+        if (id == null) {
+            return returnQuickStats(user.getId());
+        }
+        return returnQuickStats(id);
+    }
+
+    private ResponseEntity<?> returnQuickStats(Long userId) {
         Map<String, String> statsMap = new HashMap<>();
-        Long thisWeeksSessions = getSessionsForThisWeek(user.getId());
-        String favoriteEx = getFavoriteExercise(user.getId());
-        int sessionStreak = getSessionStreak(user.getId());
-        Long numOfSessions = getNumberOfTotalSessions(user.getId());
+        Long thisWeeksSessions = getSessionsForThisWeek(userId);
+        String favoriteEx = getFavoriteExercise(userId);
+        int sessionStreak = getSessionStreak(userId);
+        Long numOfSessions = getNumberOfTotalSessions(userId);
 
         statsMap.put("Favorite Exercise", favoriteEx);
         statsMap.put("Session Streak", String.valueOf(sessionStreak));
@@ -56,6 +64,7 @@ public class StatisticsService {
 
         return ResponseEntity.ok().body(statsMap);
     }
+
 
     private Long getSessionsForThisWeek(Long userId) {
         return (long) appointmentManager.findActiveSessionsForUserThisWeek(userId).size();
@@ -79,8 +88,12 @@ public class StatisticsService {
         return appointmentManager.countTotalSessions(userId);
     }
 
-    public ResponseEntity<?> getBreakDown() {
+    public ResponseEntity<?> getBreakDown(Long id) {
         User user = getUser();
+        if (id == null) {
+            List<ExerciseRepsSummaryDTO> dto = getTotalRepsPerExercise(id);
+            return ResponseEntity.ok().body(dto);
+        }
         List<ExerciseRepsSummaryDTO> dto = getTotalRepsPerExercise(user.getId());
         return ResponseEntity.ok().body(dto);
     }
@@ -94,7 +107,7 @@ public class StatisticsService {
                 .collect(Collectors.toList());
     }
 
-    public ResponseEntity<?> buildExerciseChart(String selectedExercise, String timeframe) {
+    public ResponseEntity<?> buildExerciseChart(String selectedExercise, String timeframe, Long id) {
 
         if (Objects.equals(selectedExercise, "")) {
             return ResponseEntity.ok().body(null);
@@ -107,10 +120,9 @@ public class StatisticsService {
             case "year" -> LocalDateTime.now().minusYears(1);
             default -> LocalDateTime.of(2000, 1, 1, 0, 0); //All time starting on 01/01/2000
         };
-
+        Long userId = id == null ? user.getId() : id;
         // Get only finished appointments with statistics and performances
-        List<Appointment> finishedAppointments = appointmentManager
-                .findByStatusAndDateAfter(Status.FINISHED, from, user.getId());
+        List<Appointment> finishedAppointments = getFinishedAppointmentByUserId(from, userId);
 
         // Flatten all performances
         Map<LocalDate, Integer> dailyReps = new TreeMap<>();
@@ -136,8 +148,23 @@ public class StatisticsService {
         return ResponseEntity.ok().body( new ExerciseChartDTO(labels, values, selectedExercise, timeframe));
     }
 
+    private List<Appointment> getFinishedAppointmentByUserId(LocalDateTime from, Long userId) {
+       return appointmentManager.findByStatusAndDateAfter(Status.FINISHED, from, userId);
+    }
+
     private String normalizeExerciseString(String val) {
         return val.trim().toUpperCase().replace(" ", "_");
     }
 
+    public ResponseEntity<?> getUserGoals(Long id) {
+        if (id == null) {
+            User loggedInUser = getUser();
+            return ResponseEntity.ok().body(loggedInUser.getGoals());
+        }
+        User user = userManager.findById(id);
+        if (user == null) {
+            return ResponseEntity.ok().body(new ArrayList<>());
+        }
+        return ResponseEntity.ok().body(user.getGoals());
+    }
 }

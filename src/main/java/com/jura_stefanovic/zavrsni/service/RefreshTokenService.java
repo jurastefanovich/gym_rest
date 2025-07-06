@@ -24,7 +24,7 @@ public class RefreshTokenService {
     private final UserManager userManager;
     private final JwtUtil jwtUtil;
     private String TOKEN_SECRET = "~v7!sEub}~HT]9+D]7%eJ,o>0*xH8D-2";
-    private final Map<String, String> refreshTokenStorage = new ConcurrentHashMap<>();
+//    private final Map<String, String> refreshTokenStorage = new ConcurrentHashMap<>();
 
     public RefreshTokenService(RefreshTokenRepository refreshTokenRepository, UserManager userManager, JwtUtil jwtUtil) {
         this.refreshTokenRepository = refreshTokenRepository;
@@ -50,33 +50,33 @@ public class RefreshTokenService {
     }
 
 
-    public ResponseEntity<?> refreshToken(JwtRefreshRequest refreshRequestDto) {
+//    public ResponseEntity<?> refreshToken(JwtRefreshRequest refreshRequestDto) {
+//
+//        Optional<RefreshToken> tokenOptional = refreshTokenRepository.findRefreshTokenByToken(refreshRequestDto.getRefreshToken());
+//
+//        if (!tokenOptional.isPresent()) {
+//            return new ResponseEntity<>("Unauthorized", HttpStatus.UNAUTHORIZED);
+//        }
+//
+//        RefreshToken token = tokenOptional.get();
+//        if (isTokenExpired(token.getExpiration())) {
+//            refreshTokenRepository.delete(token);
+//            return new ResponseEntity<>("Unauthorized", HttpStatus.UNAUTHORIZED);
+//        }
+//        User userOptional = userManager.findByEmail(token.getLogin());
+//
+//        if(userOptional == null) {
+//            return new ResponseEntity<>("Unauthorized", HttpStatus.UNAUTHORIZED);
+//        }
+//
+//        String jwt = jwtUtil.createToken(new HashMap<>(), token.getLogin());
+//        refreshTokenRepository.save(token);
+//        return ResponseEntity.ok(JwtResponseDto.of(jwt, token.getToken()));
+//    }
 
-        Optional<RefreshToken> tokenOptional = refreshTokenRepository.findRefreshTokenByToken(refreshRequestDto.getRefreshToken());
-
-        if (!tokenOptional.isPresent()) {
-            return new ResponseEntity<>("Unauthorized", HttpStatus.UNAUTHORIZED);
-        }
-
-        RefreshToken token = tokenOptional.get();
-        if (isTokenExpired(token.getExpiration())) {
-            refreshTokenRepository.delete(token);
-            return new ResponseEntity<>("Unauthorized", HttpStatus.UNAUTHORIZED);
-        }
-        User userOptional = userManager.findByEmail(token.getLogin());
-
-        if(userOptional == null) {
-            return new ResponseEntity<>("Unauthorized", HttpStatus.UNAUTHORIZED);
-        }
-
-        String jwt = jwtUtil.createToken(new HashMap<>(), token.getLogin());
-        refreshTokenRepository.save(token);
-        return ResponseEntity.ok(JwtResponseDto.of(jwt, token.getToken()));
-    }
-
-    private boolean isTokenExpired(LocalDateTime expirationTime){
-        return expirationTime.isBefore(LocalDateTime.now());
-    }
+//    private boolean isTokenExpired(LocalDateTime expirationTime){
+//        return expirationTime.isBefore(LocalDateTime.now());
+//    }
 
     public String logout(JwtRefreshRequest refreshToken) {
         Optional<RefreshToken> refreshTokenOptional = refreshTokenRepository.findRefreshTokenByToken(refreshToken.getRefreshToken());

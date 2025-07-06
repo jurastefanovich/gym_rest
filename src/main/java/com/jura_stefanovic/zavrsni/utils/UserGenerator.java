@@ -129,6 +129,7 @@ public class UserGenerator {
             LocalDateTime randomPastTime = startOfYear.plusSeconds(randomSeconds);
 
             user.setLastLoginTime(randomPastTime);
+            user.setCreatedAt(randomPastTime.minusDays(new Random().nextInt(4) + 2));
             user.setPassword(passwordEncoder.encode(password)); // secure it!
             user.setFirstName(firstName);
             user.setLastName(lastName);

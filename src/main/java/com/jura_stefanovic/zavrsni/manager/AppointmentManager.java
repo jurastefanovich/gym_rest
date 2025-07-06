@@ -7,8 +7,10 @@ import org.springframework.stereotype.Component;
 import com.jura_stefanovic.zavrsni.model.entity.Appointment;
 import jakarta.persistence.EntityNotFoundException;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -150,5 +152,21 @@ public class AppointmentManager {
 
     public List<Appointment> findByStatusAndDateAfter(Status status, LocalDateTime from, Long id) {
         return appointmentRepository.findFinishedAppointmentsWithStatisticsAfter(status, from, id);
+    }
+
+    public Integer getNumberOfActiveAppointmentsToday() {
+        LocalDateTime startOfDay = LocalDate.now().atStartOfDay();
+        LocalDateTime endOfDay = LocalDate.now().atTime(LocalTime.MAX);
+        return appointmentRepository.getNumberOfTodaysSessions(startOfDay, endOfDay);
+    }
+
+    public List<Object[]> findWeeklyAttendance() {
+        LocalDate today = LocalDate.now();
+        LocalDate start = today.with(DayOfWeek.MONDAY);
+        LocalDate end = today.with(DayOfWeek.SUNDAY);
+        return appointmentRepository.findWeeklyAttendance(
+                start.atStartOfDay(),
+                end.atTime(LocalTime.MAX)
+        );
     }
 }

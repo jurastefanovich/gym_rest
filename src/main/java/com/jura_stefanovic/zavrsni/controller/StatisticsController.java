@@ -3,6 +3,7 @@ package com.jura_stefanovic.zavrsni.controller;
 import com.jura_stefanovic.zavrsni.service.StatisticsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -15,26 +16,32 @@ public class StatisticsController {
         this.statisticsService = statisticsService;
     }
 
-    @GetMapping("/quick_stats")
-    public ResponseEntity<?> getQuickStats(){
-        return statisticsService.getQuickStats();
+    @GetMapping("/quick_stats/{id}")
+    public ResponseEntity<?> getQuickStats(@PathVariable @Nullable Long id){
+        return statisticsService.getQuickStats(id);
     }
 
-    @GetMapping("/last/{num}")
-    public ResponseEntity<?> getLastNumber(@PathVariable int num) {
-        return statisticsService.getLastAppointments(num);
+    @GetMapping("/last/{num}/{id}")
+    public ResponseEntity<?> getLastNumber(@PathVariable int num, @PathVariable @Nullable Long id ) {
+        return statisticsService.getLastAppointments(num,id);
     }
 
-    @GetMapping("/breakdown")
-    public ResponseEntity<?> getBreakDown() {
-        return statisticsService.getBreakDown();
+    @GetMapping("/breakdown/{id}")
+    public ResponseEntity<?> getBreakDown(@PathVariable @Nullable Long id) {
+        return statisticsService.getBreakDown(id);
     }
 
-    @GetMapping("/chart")
+    @GetMapping("/chart/{id}")
     public ResponseEntity<?> getExerciseChart(
+            @PathVariable @Nullable Long id,
             @RequestParam(name = "exercise") String exercise,
             @RequestParam(name = "timeframe", defaultValue = "week") String timeframe) {
-        return statisticsService.buildExerciseChart(exercise, timeframe);
+        return statisticsService.buildExerciseChart(exercise, timeframe, id);
+    }
+
+    @GetMapping("/goals/{id}")
+    public ResponseEntity<?> getUserGoals(@PathVariable @Nullable Long id) {
+        return statisticsService.getUserGoals(id);
     }
 
 }

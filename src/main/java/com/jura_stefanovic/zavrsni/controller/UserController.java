@@ -56,4 +56,9 @@ public class UserController {
     public ResponseEntity<?> getLoggedInUserData() {
         return userService.getLoggedInUserData();
     }
+
+    @GetMapping("/profile/{userId}")
+    public ResponseEntity<?> getUserProfileById(@PathVariable Long userId) {
+        return userService.getUserProfileById(userId);
+    }
 }

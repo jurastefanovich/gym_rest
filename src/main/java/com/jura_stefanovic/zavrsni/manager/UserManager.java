@@ -6,6 +6,10 @@ import com.jura_stefanovic.zavrsni.repository.UserRepo;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 import java.util.Optional;
 
@@ -51,5 +55,16 @@ public class UserManager {
 
     public List<User> findAll() {
         return userRepo.findAll();
+    }
+
+    public Integer getNewUserForThisMonth() {
+        LocalDateTime startOfMonth = LocalDate.now().withDayOfMonth(1).atStartOfDay();
+        LocalDateTime endOfMonth = LocalDate.now().with(TemporalAdjusters.lastDayOfMonth()).atTime(LocalTime.MAX);
+
+        return userRepo.findNewUsersForThisMonth(startOfMonth, endOfMonth);
+    }
+
+    public List<Object[]> findUserRegistrationsPerMonth() {
+        return userRepo.findUserRegistrationsPerMonth();
     }
 }

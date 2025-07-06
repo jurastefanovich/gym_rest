@@ -1,10 +1,12 @@
 package com.jura_stefanovic.zavrsni.controller;
 
+import com.jura_stefanovic.zavrsni.constants.Role;
 import com.jura_stefanovic.zavrsni.dto.models.PerformanceDto;
 import com.jura_stefanovic.zavrsni.dto.models.appointment.AppointmentPutDto;
 import com.jura_stefanovic.zavrsni.dto.requests.FinishAppointmentRequestDTO;
 import com.jura_stefanovic.zavrsni.dto.requests.GroupAppointmentRequest;
 import com.jura_stefanovic.zavrsni.dto.requests.ServiceAppointmentDto;
+import jakarta.annotation.security.RolesAllowed;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.jura_stefanovic.zavrsni.model.entity.Appointment;
@@ -121,6 +123,7 @@ public class AppointmentController {
     }
 
     @PutMapping("/finish/{appointmentId}")
+    @RolesAllowed({"TRAINER", "ADMIN"})
     public ResponseEntity<?> finishAppointment( @RequestBody FinishAppointmentRequestDTO requestDTO,
                                                 @PathVariable Long appointmentId) {
         return appointmentService.finishAppointment(requestDTO, appointmentId);

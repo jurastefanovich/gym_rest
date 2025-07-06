@@ -84,6 +84,13 @@ public class User implements UserDetails, Serializable {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ExercisePerformance> performances;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Goal> goals;
+
+    @JsonFormat(pattern = "dd/MM/yyyy, HH:mm:ss")
+    private LocalDateTime createdAt;
+    private boolean active = true;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.emptyList();

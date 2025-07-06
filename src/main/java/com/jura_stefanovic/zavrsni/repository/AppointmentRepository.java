@@ -88,4 +88,30 @@ public interface AppointmentRepository  extends JpaRepository<Appointment, Long>
             @Param("from") LocalDateTime from,
             @Param("id") Long id
     );
+    @Query("""
+    SELECT COUNT(a)
+    FROM Appointment a
+    WHERE a.status = 'ACTIVE'
+      AND a.date BETWEEN :startOfDay AND :endOfDay
+""")
+    Integer getNumberOfTodaysSessions(
+            @Param("startOfDay") LocalDateTime startOfDay,
+            @Param("endOfDay") LocalDateTime endOfDay
+    );
+
+    @Query("""
+    SELECT FUNCTION('to_char', a.date, 'Day') AS day,
+           COUNT(a) AS count
+    FROM Appointment a
+    WHERE a.status = 'ACTIVE'
+      AND a.date >= :startOfWeek
+      AND a.date <= :endOfWeek
+    GROUP BY FUNCTION('to_char', a.date, 'Day')
+    ORDER BY MIN(a.date)
+""")
+    List<Object[]> findWeeklyAttendance(
+            @Param("startOfWeek") LocalDateTime startOfWeek,
+            @Param("endOfWeek") LocalDateTime endOfWeek
+    );
+
 }

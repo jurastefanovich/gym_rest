@@ -85,10 +85,19 @@ public class UserService {
 
     public ResponseEntity<?> getLoggedInUserData() {
         User loggedInUser = userManager.getCurrentUser();
-        if (loggedInUser == null) {
+        return userDtoResponse(loggedInUser);
+    }
+
+    public ResponseEntity<?> getUserProfileById(Long userId) {
+        User user = userManager.findById(userId);
+        return userDtoResponse(user);
+    }
+
+    private ResponseEntity<?> userDtoResponse(User user) {
+        if (user == null) {
             return ResponseEntity.ok().body(null);
         }
-        UserDto userDto = new UserDto(loggedInUser);
+        UserDto userDto = new UserDto(user);
         return ResponseEntity.ok().body(userDto);
     }
 }

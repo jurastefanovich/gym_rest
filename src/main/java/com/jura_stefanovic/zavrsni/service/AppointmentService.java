@@ -38,11 +38,13 @@ public class AppointmentService {
 
     public ResponseEntity<?> getAllAppointments() {
         User currentUser = userManager.getCurrentUser();
+        //Returning all appointments for TRAINER and ADMIN roles
         if (!currentUser.isUser()) {
             List<Appointment> list = appointmentManager.findAll();
             List<AppointmentListDto> dto = list.stream().map(AppointmentListDto::new).toList();
             return ResponseEntity.ok().body(dto);
         } else {
+            //Returning all appointments for logged in user
             List<Appointment> list = appointmentManager.findAppointmentsByUserId(currentUser.getId());
             List<AppointmentListDto> dto = list.stream().map(AppointmentListDto::new).toList();
             return ResponseEntity.ok().body(dto);
@@ -326,8 +328,14 @@ public class AppointmentService {
     }
 
     public ResponseEntity<?> finishAppointment(FinishAppointmentRequestDTO requestDTO, Long appointmentId) {
-        Appointment dbAppointment = appointmentManager.findById(appointmentId);
+        User loggedInUser = userManager.getCurrentUser();
 
+        if (loggedInUser.isUser()) {
+            return ResponseEntity.badRequest().body("Action not allowed");
+        }
+
+        Appointment dbAppointment = appointmentManager.findById(appointmentId);
+        //Allow finishing an appointment twice if data needs to be edited later on
         dbAppointment.setStatus(Status.FINISHED);
         Statistics stats = new Statistics(); // Shared statistics object
         stats.setAppointment(dbAppointment);

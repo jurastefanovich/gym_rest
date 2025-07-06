@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class AuthService {
@@ -45,12 +46,8 @@ public class AuthService {
     public ResponseEntity<?> authenticate(AuthRequest request) {
         User user = userManager.findByEmail(request.getEmail());
 
-        if (user == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponse("Invalid credentials"));
-        }
-
         try {
-            authLogin(user, request); // Validate password or credentials
+            authLogin(user, request); // Validate password and credentials
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
         }
@@ -64,7 +61,7 @@ public class AuthService {
         user.setLastLoginTime(LocalDateTime.now());
         userManager.save(user);
 
-        return ResponseEntity.ok().body(new AuthResponse(user.getFullName(), accessToken, refreshToken));
+        return ResponseEntity.ok().body(new AuthResponse(user.getFullName(), accessToken, refreshToken, user.getId(), user.getRole()));
     }
 
 
@@ -124,5 +121,17 @@ public class AuthService {
         }catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponse(e.getMessage()));
         }
+    }
+
+    public String logout(String refreshRequestDto) {
+//        Optional<RefreshToken> refreshTokenOptional = refreshTokenRepository.findRefreshTokenByToken(refreshToken.getRefreshToken());
+//        RefreshToken token = refreshTokenOptional.get();
+//
+//        if (refreshTokenOptional.isPresent()){
+//            refreshTokenRepository.delete(token);
+//            return ConfirmationMessages.LOGGED_OUT.getMessage();
+//        }
+
+        return null;
     }
 }
